@@ -9,8 +9,13 @@ import FormCustomization from "./components/form_components/FormCustomization";
 import { useApi } from "./hooks/useApi";
 import { useEffect, useState } from "react";
 import { addSchemaId } from "./slice/formSlice";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 function App() {
+  const currentPage: string = useSelector(
+    (state: any) => state.page.currentPage
+  );
   const [formSchema, setFormSchema] = useState<FormSchema[]>([]);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -22,12 +27,11 @@ function App() {
       })
       .catch((error) => {
         console.log("Error fetching form schema:", error);
+        setFormSchema([]);
+        dispatch(addSchemaId(""));
+        toast.warning("No form schema found. Please create a new form.");
       });
-  }, []);
-
-  const currentPage: string = useSelector(
-    (state: any) => state.page.currentPage
-  );
+  }, [currentPage]);
 
   const renderCurentPage = () => {
     switch (currentPage) {
@@ -42,6 +46,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-center" richColors />
       <SidebarProvider
         style={
           {

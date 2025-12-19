@@ -5,6 +5,7 @@ import type { FormSchema } from "@/types/formSchema";
 import { useDispatch } from "react-redux";
 import { addForm, addSchemaId } from "@/slice/formSlice";
 import { useApi } from "@/hooks/useApi";
+import { toast } from "sonner";
 
 export default function FormCustomization() {
   const dispatch = useDispatch();
@@ -29,10 +30,12 @@ export default function FormCustomization() {
       .post("/forms/submit-schema", formFields)
       .then((response) => {
         dispatch(addForm(formFields));
-        dispatch(addSchemaId(response.data));
+        dispatch(addSchemaId(response.data.schemaId));
+        toast.success("Form schema submitted successfully!");
       })
       .catch((error) => {
         console.log("Error submitting form schema:", error);
+        toast.error("Failed to submit form schema. Please try again.");
       });
   };
 

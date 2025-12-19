@@ -9,20 +9,22 @@ import { changeRenderedPage } from "@/slice/pageSlice";
 import { deleteFormSchema } from "@/slice/formSlice";
 import { useApi } from "@/hooks/useApi";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 export function NavMain() {
   const dispatch = useDispatch();
   const { schemaId } = useSelector((state: any) => state.form);
 
   const handleDeleteSchema = () => {
-    dispatch(deleteFormSchema());
     useApi
       .delete(`/forms/delete-schema/${schemaId}`)
       .then((response) => {
-        console.log("Form schema deleted successfully:", response.data);
+        dispatch(deleteFormSchema());
+        toast.success("Form schema deleted successfully!");
       })
       .catch((error) => {
         console.log("Error deleting form schema:", error);
+        toast.error("Failed to delete form schema. Please try again.");
       });
   };
 
