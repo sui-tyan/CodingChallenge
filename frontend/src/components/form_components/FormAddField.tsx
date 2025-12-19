@@ -3,15 +3,19 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { FormSchema } from "@/types/formSchema";
 import SelectForm from "./SelectForm";
+import { Badge } from "../ui/badge";
+import { X } from "lucide-react";
 
 interface FormAddFieldProps {
   fieldData: FormSchema;
   onChange: (updatedField: FormSchema) => void;
+  onRemove: () => void;
 }
 
 export default function FormAddField({
   fieldData,
   onChange,
+  onRemove,
 }: FormAddFieldProps) {
   const handleInputChange = (field: keyof FormSchema, value: any) => {
     onChange({ ...fieldData, [field]: value });
@@ -19,8 +23,15 @@ export default function FormAddField({
 
   return (
     <>
-      <div className="border p-2.5">
-        <div>
+      <div className="border p-2.5 max-w-3/4 rounded-lg mb-4 mx-auto">
+        <div className="flex flex-col">
+          <Badge
+            variant={"destructive"}
+            className="mb-2 cursor-pointer self-end"
+            onClick={onRemove}
+          >
+            <X />
+          </Badge>
           <Input
             type="text"
             name="label"
@@ -39,7 +50,7 @@ export default function FormAddField({
             handleInputChange={handleInputChange}
             items={["text", "number", "radio", "file"]}
           />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 m-2">
             <Checkbox
               id="required"
               checked={fieldData.required}

@@ -24,12 +24,15 @@ export default function FormCustomization() {
     );
   };
 
+  const handleRemoveField = (id: number) => {
+    setFormFields((prev) => prev.filter((field) => field.id !== id));
+  };
+
   const handleSubmit = () => {
     dispatch(addForm(formFields));
     useApi
       .post("/forms/submit-schema", formFields)
       .then((response) => {
-        dispatch(addForm(formFields));
         dispatch(addSchemaId(response.data.schemaId));
         toast.success("Form schema submitted successfully!");
       })
@@ -46,15 +49,22 @@ export default function FormCustomization() {
           key={field.id}
           fieldData={field}
           onChange={(updatedField) => handleFieldChange(field.id, updatedField)}
+          onRemove={() => handleRemoveField(field.id)}
         />
       ))}
 
-      <Button className="mt-4 w-full" onClick={handleAddField}>
-        Add Form Field
-      </Button>
-      <Button className="mt-4 w-full" color="primary" onClick={handleSubmit}>
-        Submit Form Schema
-      </Button>
+      <div className="flex justify-center gap-4 mb-6">
+        <Button
+          variant="outline"
+          className="cursor-pointer"
+          onClick={handleAddField}
+        >
+          Add Field
+        </Button>
+        <Button className="cursor-pointer" onClick={handleSubmit}>
+          Submit Form Schema
+        </Button>
+      </div>
     </>
   );
 }
