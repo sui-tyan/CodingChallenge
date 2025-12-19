@@ -36,6 +36,10 @@ const deleteFormSchema = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid form schema ID" });
+    }
+
     const result = await FormSchema.findByIdAndDelete(id);
 
     console.log(result);
